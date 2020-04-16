@@ -1,5 +1,6 @@
 package br.com.luckymoney.exceptionhandler;
 
+import static br.com.luckymoney.util.Utils.isNull;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import br.com.luckymoney.util.Utils;
+
 /***
  * 
  * @author Lucas Oliveira
@@ -40,7 +43,7 @@ public class LuckymoneyExceptionHandler extends ResponseEntityExceptionHandler {
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 
 		String msgUsuario = messageSource.getMessage("mensagem.invalida", null, LocaleContextHolder.getLocale());
-		String msgDev = ex.getCause().getMessage();
+		String msgDev = isNull(ex.getCause()) ? ex.toString() : ex.getCause().getMessage();
 
 		List<Erro> erros = Arrays.asList(new Erro(msgUsuario, msgDev));
 		return handleExceptionInternal(ex, erros, headers, BAD_REQUEST, request);
@@ -55,7 +58,8 @@ public class LuckymoneyExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler({ EmptyResultDataAccessException.class })
 	@ResponseStatus(NOT_FOUND)
-	public ResponseEntity<Object> handleEmptyResultDataAccessException(EmptyResultDataAccessException ex, WebRequest request) {
+	public ResponseEntity<Object> handleEmptyResultDataAccessException(EmptyResultDataAccessException ex,
+			WebRequest request) {
 		String msgUsuario = messageSource.getMessage("recurso.nao-encontrado", null, LocaleContextHolder.getLocale());
 		String msgDev = ex.toString();
 
