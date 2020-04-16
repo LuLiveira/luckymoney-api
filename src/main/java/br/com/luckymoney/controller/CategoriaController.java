@@ -24,7 +24,11 @@ import br.com.luckymoney.event.RecursoCriadoEvent;
 import br.com.luckymoney.model.Categoria;
 import br.com.luckymoney.repository.CategoriaRepository;
 import br.com.luckymoney.util.Utils;
-
+/***
+ * 
+ * @author Lucas Oliveira
+ *
+ */
 @RestController
 @RequestMapping("/categorias")
 public class CategoriaController {
@@ -44,8 +48,8 @@ public class CategoriaController {
 	public ResponseEntity<Categoria> criar(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
 		categoria = categoriaRepository.save(categoria);
 
-		//Dispara evento para criar Location com ID do Objeto criado
-		//Esse padrão de projeto é conhecido como Observer
+		/*Dispara evento para criar Location com ID do Objeto criado
+		Esse padrão de projeto é conhecido como Observer*/
 		publisher.publishEvent(new RecursoCriadoEvent(this, response, categoria.getCodigo()));
 
 		return ResponseEntity.status(CREATED).body(categoria);

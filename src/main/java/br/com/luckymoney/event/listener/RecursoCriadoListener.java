@@ -10,6 +10,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.luckymoney.event.RecursoCriadoEvent;
 
+/***
+ * 
+ * @author Lucas Oliveira
+ *
+ */
 @Component
 public class RecursoCriadoListener implements ApplicationListener<RecursoCriadoEvent> {
 
