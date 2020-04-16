@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.luckymoney.business.PessoaBusiness;
 import br.com.luckymoney.event.RecursoCriadoEvent;
 import br.com.luckymoney.model.Pessoa;
 import br.com.luckymoney.repository.PessoaRepository;
@@ -42,6 +43,9 @@ public class PessoaController {
 
 	@Autowired
 	private ApplicationEventPublisher publisher;
+	
+	@Autowired
+	private PessoaBusiness pessoaBusiness;
 
 	@GetMapping
 	public List<Pessoa> listar() {
@@ -71,13 +75,7 @@ public class PessoaController {
 
 	@PutMapping("/{codigo}")
 	public ResponseEntity<Pessoa> atualizar(@PathVariable Long codigo, @Valid @RequestBody Pessoa novaPessoa) {
-
-		Pessoa pessoa = pessoaRepository.findOne(codigo);
-		if(isNull(pessoa)) throw new EmptyResultDataAccessException(1);
-		BeanUtils.copyProperties(novaPessoa, pessoa, "codigo"); // importante saber (copyProperties) -> copia as
-		pessoa = pessoaRepository.save(pessoa); 				// propriedades de um objeto para outro, o terceiro
-		return ResponseEntity.ok(pessoa); 						// parametro é o atributo que deve ser ignorado (se
-																// existir)
+		return ResponseEntity.ok(pessoaBusiness.atualizar(novaPessoa, codigo));
 	}
 
 }
