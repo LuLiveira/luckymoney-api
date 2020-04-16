@@ -9,14 +9,16 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.HttpStatus;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -65,6 +67,17 @@ public class PessoaController {
 	@ResponseStatus(NO_CONTENT)
 	public void remover(@PathVariable Long codigo) {
 		pessoaRepository.delete(codigo);
+	}
+
+	@PutMapping("/{codigo}")
+	public ResponseEntity<Pessoa> atualizar(@PathVariable Long codigo, @Valid @RequestBody Pessoa novaPessoa) {
+
+		Pessoa pessoa = pessoaRepository.findOne(codigo);
+		if(isNull(pessoa)) throw new EmptyResultDataAccessException(1);
+		BeanUtils.copyProperties(novaPessoa, pessoa, "codigo"); // importante saber (copyProperties) -> copia as
+		pessoa = pessoaRepository.save(pessoa); 				// propriedades de um objeto para outro, o terceiro
+		return ResponseEntity.ok(pessoa); 						// parametro é o atributo que deve ser ignorado (se
+																// existir)
 	}
 
 }
