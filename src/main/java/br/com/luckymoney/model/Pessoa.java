@@ -27,11 +27,11 @@ public class Pessoa {
 	@NotNull
 	private Boolean ativo;
 
-	public boolean isAtivo() {
+	public Boolean isAtivo() {
 		return ativo;
 	}
 
-	public void setAtivo(boolean ativo) {
+	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}
 
