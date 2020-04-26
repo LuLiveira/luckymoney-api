@@ -9,6 +9,11 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+/***
+ * 
+ * @author Lucas Oliveira
+ *
+ */
 @Entity
 @Table(name = "pessoa")
 public class Pessoa {

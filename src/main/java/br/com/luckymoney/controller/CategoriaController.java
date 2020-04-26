@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import br.com.luckymoney.business.CategoriaBusiness;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import br.com.luckymoney.event.RecursoCriadoEvent;
 import br.com.luckymoney.model.Categoria;
 import br.com.luckymoney.repository.CategoriaRepository;
 import br.com.luckymoney.util.Utils;
+
 /***
  * 
  * @author Lucas Oliveira
@@ -32,22 +34,24 @@ import br.com.luckymoney.util.Utils;
 public class CategoriaController {
 
 	@Autowired
-	private CategoriaRepository categoriaRepository;
+	private CategoriaBusiness categoriaBusiness;
 
 	@Autowired
 	private ApplicationEventPublisher publisher;
 
 	@GetMapping
 	public List<Categoria> listar() {
-		return categoriaRepository.findAll();
+		return categoriaBusiness.findAll();
 	}
 
 	@PostMapping
 	public ResponseEntity<Categoria> criar(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
-		categoria = categoriaRepository.save(categoria);
+		categoria = categoriaBusiness.save(categoria);
 
-		/*Dispara evento para criar Location com ID do Objeto criado
-		Esse padrão de projeto é conhecido como Observer*/
+		/*
+		 * Dispara evento para criar Location com ID do Objeto criado Esse padrão de
+		 * projeto é conhecido como Observer
+		 */
 		publisher.publishEvent(new RecursoCriadoEvent(this, response, categoria.getCodigo()));
 
 		return ResponseEntity.status(CREATED).body(categoria);
@@ -55,12 +59,12 @@ public class CategoriaController {
 
 	@GetMapping("/{codigo}")
 	public ResponseEntity<Categoria> buscarPeloCodigo(@PathVariable Long codigo) {
-		Categoria categoria = categoriaRepository.findOne(codigo);
+		Categoria categoria = categoriaBusiness.findOne(codigo);
 		return !Utils.isNull(categoria) ? ResponseEntity.ok(categoria) : ResponseEntity.notFound().build();
 	}
-	
+
 	@DeleteMapping("/{codigo}")
-	public void remover (@PathVariable Long codigo) {
-		categoriaRepository.delete(codigo);
+	public void remover(@PathVariable Long codigo) {
+		categoriaBusiness.delete(codigo);
 	}
 }

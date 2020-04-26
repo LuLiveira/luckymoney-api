@@ -1,5 +1,10 @@
 package br.com.luckymoney.exceptionhandler.utils;
 
+/***
+ * 
+ * @author Lucas Oliveira
+ *
+ */
 public class Erro {
 	private String mensagemUsuario;
 	private String mensagemDesenvolvedor;

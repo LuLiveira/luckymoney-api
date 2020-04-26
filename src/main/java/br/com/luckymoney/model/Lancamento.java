@@ -21,6 +21,11 @@ import org.springframework.format.annotation.NumberFormat.Style;
 
 import br.com.luckymoney.model.enums.TipoLancamento;
 
+/***
+ * 
+ * @author Lucas Oliveira
+ *
+ */
 @Entity
 @Table(name = "lancamento")
 public class Lancamento {
@@ -153,5 +158,4 @@ public class Lancamento {
 			return false;
 		return true;
 	}
-
 }

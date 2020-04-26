@@ -5,6 +5,8 @@ import static br.com.luckymoney.util.Utils.isNull;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.luckymoney.business.exception.PessoaInexistenteOuInativaException;
@@ -12,7 +14,7 @@ import br.com.luckymoney.model.Lancamento;
 import br.com.luckymoney.model.Pessoa;
 import br.com.luckymoney.repository.LancamentoRepository;
 import br.com.luckymoney.repository.PessoaRepository;
-import br.com.luckymoney.util.Utils;
+import br.com.luckymoney.repository.filter.LancamentoFilter;
 
 /***
  * 
@@ -28,8 +30,8 @@ public class LancamentoBusiness {
 	@Autowired
 	private PessoaRepository pessoaRepository;
 
-	public List<Lancamento> buscar() {
-		return lancamentoRepository.findAll();
+	public Page<Lancamento> filtrar(LancamentoFilter lancamentoFilter, Pageable pageable) {
+		return lancamentoRepository.filtrar(lancamentoFilter, pageable);
 	}
 
 	public Lancamento buscarPorCodigo(Long codigo) {
@@ -49,5 +51,9 @@ public class LancamentoBusiness {
 		if (isNull(pessoa) || !pessoa.isAtivo()) {
 			throw new PessoaInexistenteOuInativaException();
 		}
+	}
+
+	public void remover(Long codigo) {
+		lancamentoRepository.delete(codigo);
 	}
 }

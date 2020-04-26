@@ -37,28 +37,25 @@ import br.com.luckymoney.repository.PessoaRepository;
 public class PessoaController {
 
 	@Autowired
-	private PessoaRepository pessoaRepository;
+	private PessoaBusiness pessoaBusiness;
 
 	@Autowired
 	private ApplicationEventPublisher publisher;
 
-	@Autowired
-	private PessoaBusiness pessoaBusiness;
-
 	@GetMapping
 	public List<Pessoa> listar() {
-		return pessoaRepository.findAll();
+		return pessoaBusiness.findAll();
 	}
 
 	@GetMapping("/{codigo}")
 	public ResponseEntity<Pessoa> buscarPorCodigo(@PathVariable Long codigo) {
-		Pessoa pessoa = pessoaRepository.findOne(codigo);
+		Pessoa pessoa = pessoaBusiness.findOne(codigo);
 		return !isNull(pessoa) ? ResponseEntity.ok(pessoa) : ResponseEntity.notFound().build();
 	}
 
 	@PostMapping
 	public ResponseEntity<Pessoa> criar(@Valid @RequestBody Pessoa pessoa, HttpServletResponse response) {
-		pessoa = pessoaRepository.save(pessoa);
+		pessoa = pessoaBusiness.save(pessoa);
 
 		publisher.publishEvent(new RecursoCriadoEvent(this, response, pessoa.getCodigo()));
 
@@ -68,7 +65,7 @@ public class PessoaController {
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(NO_CONTENT)
 	public void remover(@PathVariable Long codigo) {
-		pessoaRepository.delete(codigo);
+		pessoaBusiness.delete(codigo);
 	}
 
 	@PutMapping("/{codigo}")
