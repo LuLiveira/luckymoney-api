@@ -27,7 +27,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Value("${token.expiration}")
     private int tempoDeVidaToken;
 
-    @Value("${{refresh.token.expiration}")
+    @Value("${refresh.token.expiration}")
     private int tempoDeVidaRefreshToken;
 
     public AuthorizationServerConfig(AuthenticationManager authenticationManager) {
