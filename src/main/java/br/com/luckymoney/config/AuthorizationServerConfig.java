@@ -39,7 +39,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         clients.inMemory()
                 .withClient(cliente)
                 .secret(clientePassword)
-                .scopes("read", "write")
+                .scopes("read", "write", "delete")
                 .authorizedGrantTypes("password", "refresh_token")
                 .accessTokenValiditySeconds(tempoDeVidaToken)
                 .refreshTokenValiditySeconds(tempoDeVidaRefreshToken);

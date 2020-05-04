@@ -1,5 +1,6 @@
 package br.com.luckymoney.token;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -25,6 +26,10 @@ import javax.servlet.http.HttpServletResponse;
 
 @ControllerAdvice
 public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2AccessToken> {
+
+    @Value("${refresh.token.age}")
+    private int refreshTokenAge;
+
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
         return "postAccessToken".equals(returnType.getMethod().getName());
@@ -53,8 +58,7 @@ public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2Acces
         refreshTokenCookie.setHttpOnly(true);
         refreshTokenCookie.setSecure(false);
         refreshTokenCookie.setPath(req.getContextPath().concat("/oauth/token"));
-        refreshTokenCookie.setMaxAge(2592000); // 30 dias
+        refreshTokenCookie.setMaxAge(refreshTokenAge);
         res.addCookie(refreshTokenCookie);
     }
-
 }
