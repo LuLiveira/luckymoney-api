@@ -5,12 +5,19 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import br.com.luckymoney.model.Usuario;
+import br.com.luckymoney.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,6 +43,9 @@ import br.com.luckymoney.repository.PessoaRepository;
 @RestController
 @RequestMapping("/pessoas")
 public class PessoaController {
+
+	@Autowired
+	private UsuarioRepository usuarioRepository;
 
 	@Autowired
 	private PessoaBusiness pessoaBusiness;
@@ -85,4 +95,11 @@ public class PessoaController {
 		pessoaBusiness.atualizarPropriedadeAtivo(codigo, ativo);
 	}
 
+
+	/*@PostMapping("/usuario") MIGRAR PARA CONTROLLER DE USUARIO
+	public void usuario(@RequestBody Usuario usuario) {
+		Usuario user = usuarioRepository.save(usuario);
+
+		System.out.println(user);
+	}*/
 }
