@@ -94,12 +94,4 @@ public class PessoaController {
 	public void atualizarPropriedadeAtivo(@PathVariable Long codigo, @RequestBody Boolean ativo) {
 		pessoaBusiness.atualizarPropriedadeAtivo(codigo, ativo);
 	}
-
-
-	/*@PostMapping("/usuario") MIGRAR PARA CONTROLLER DE USUARIO
-	public void usuario(@RequestBody Usuario usuario) {
-		Usuario user = usuarioRepository.save(usuario);
-
-		System.out.println(user);
-	}*/
 }

@@ -1,5 +1,7 @@
 package br.com.luckymoney.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
@@ -14,6 +16,8 @@ public class Usuario {
 
     private String nome;
     private String email;
+
+    @JsonIgnore
     private String senha;
 
     @ManyToMany(fetch = FetchType.EAGER)
