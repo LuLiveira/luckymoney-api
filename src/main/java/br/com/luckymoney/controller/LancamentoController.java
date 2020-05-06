@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import br.com.luckymoney.repository.projection.ResumoLancamento;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -46,6 +47,13 @@ public class LancamentoController {
 		Page<Lancamento> listaDeLancamentos = lancamentoBusiness.filtrar(lancamentoFilter, pageable);
 		return ResponseEntity.ok(listaDeLancamentos);
 	}
+
+	@GetMapping(params = "resumo")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	public ResponseEntity<Page<ResumoLancamento>> resumir(LancamentoFilter lancamentoFilter, Pageable pageable) {
+		Page<ResumoLancamento> listaDeLancamentos = lancamentoBusiness.resumir(lancamentoFilter, pageable);
+		return ResponseEntity.ok(listaDeLancamentos);
+	}
 	
 	@GetMapping(value = "/{codigo}")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
@@ -58,9 +66,7 @@ public class LancamentoController {
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
 	public ResponseEntity<Lancamento> criar(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
 		lancamento = lancamentoBusiness.criar(lancamento);
-		
 		publisher.publishEvent(new RecursoCriadoEvent(this, response, lancamento.getCodigo()));
-
 		return ResponseEntity.status(CREATED).body(lancamento);
 	}
 

@@ -1,5 +1,7 @@
 package br.com.luckymoney.token;
 
+import br.com.luckymoney.config.property.Luckymoneyroperty;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -30,6 +32,9 @@ public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2Acces
     @Value("${refresh.token.age}")
     private int refreshTokenAge;
 
+    @Autowired
+    private Luckymoneyroperty luckymoneyroperty;
+
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
         return "postAccessToken".equals(returnType.getMethod().getName());
@@ -56,7 +61,7 @@ public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2Acces
     private void adicionarRefreshTokenNoCookie(String refreshToken, HttpServletRequest req, HttpServletResponse res) {
         Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
         refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setSecure(false);
+        refreshTokenCookie.setSecure(luckymoneyroperty.getSeguranca().isEnableHttps());
         refreshTokenCookie.setPath(req.getContextPath().concat("/oauth/token"));
         refreshTokenCookie.setMaxAge(refreshTokenAge);
         res.addCookie(refreshTokenCookie);
