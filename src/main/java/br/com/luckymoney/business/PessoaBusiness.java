@@ -62,4 +62,9 @@ public class PessoaBusiness {
 	public List<Pessoa> findAll() {
 		return pessoaRepository.findAll();
 	}
+
+	public List<Pessoa> buscarPorNome(String nome){
+		nome = nome.concat("%"); //Gambiarra!
+		return pessoaRepository.buscaPorNome(nome);
+	}
 }

@@ -5,6 +5,8 @@ import static br.com.luckymoney.util.Utils.isNull;
 import java.util.List;
 
 import br.com.luckymoney.repository.projection.ResumoLancamento;
+import br.com.luckymoney.util.Utils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +43,9 @@ public class LancamentoBusiness {
 
 	public Lancamento buscarPorCodigo(Long codigo) {
 		Lancamento lancamento = lancamentoRepository.findOne(codigo);
+		if(Utils.isNull(lancamento)){
+			throw new IllegalArgumentException();
+		}
 		return lancamento;
 	}
 
@@ -60,5 +65,16 @@ public class LancamentoBusiness {
 
 	public void remover(Long codigo) {
 		lancamentoRepository.delete(codigo);
+	}
+
+	public Lancamento atualizar(Lancamento novoLancamento, Long codigo) {
+		Lancamento lancamentoPorCodigo = buscarPorCodigo(codigo);
+		if(!novoLancamento.getPessoa().equals(lancamentoPorCodigo.getPessoa())){
+			validaPessoa(novoLancamento.getPessoa());
+		}
+		BeanUtils.copyProperties(novoLancamento, lancamentoPorCodigo, "codigo");
+		lancamentoPorCodigo = lancamentoRepository.save(lancamentoPorCodigo);
+
+		return lancamentoPorCodigo;
 	}
 }
