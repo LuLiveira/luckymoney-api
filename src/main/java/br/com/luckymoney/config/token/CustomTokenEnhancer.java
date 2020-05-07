@@ -11,12 +11,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CustomTokenEnhancer implements TokenEnhancer {
+
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
-        UsuarioSistema usuario = (UsuarioSistema) authentication.getPrincipal();
+        UsuarioSistema usuarioSistema= (UsuarioSistema) authentication.getPrincipal();
 
-        Map<String, Object> addInfo = new HashMap<String, Object>();
-        addInfo.put("nome", usuario.getUsuario().getNome());
+        Map<String, Object> addInfo = new HashMap<>();
+        addInfo.put("nome", usuarioSistema.getUsuario().getNome());
 
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(addInfo);
         return accessToken;
